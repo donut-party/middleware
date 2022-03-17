@@ -1,9 +1,11 @@
 {:paths ["src"]
  :deps  {bk/ring-gzip              {:mvn/version "0.3.0"}
+         club.donutpower/system    {:mvn/version "0.0.112"}
          org.clojure/clojure       {:mvn/version "1.10.3"}
          medley/medley             {:mvn/version "1.3.0"}
          meta-merge/meta-merge     {:mvn/version "1.0.0"}
          metosin/malli             {:mvn/version "0.6.1"}
+         metosin/muuntaja          {:mvn/version "0.6.8"}
          metosin/reitit-ring       {:mvn/version "0.5.15"}
          metosin/reitit-malli      {:mvn/version "0.5.15"}
          metosin/reitit-middleware {:mvn/version "0.5.15"}

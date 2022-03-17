@@ -1,13 +1,17 @@
 (ns donut.middleware
   "Defines a default middleware stack for donut apps."
-  (:require [clojure.stacktrace :as cst]
-            [reitit.ring.coercion :as rrc]
-            [reitit.ring.middleware.muuntaja :as rrmm]
-            [reitit.ring.middleware.parameters :as rrmp]
-            [ring.middleware.defaults :as ring-defaults]
-            [ring.middleware.gzip :as ring-gzip]
-            [ring.util.response :as resp]
-            #_[ring.middleware.stacktrace :as ring-stacktrace]))
+  (:require
+   [clojure.stacktrace :as cst]
+   [donut.system :as ds]
+   [muuntaja.core :as m]
+   [reitit.coercion.malli :as rcm]
+   [reitit.ring :as rr]
+   [reitit.ring.coercion :as rrc]
+   [reitit.ring.middleware.muuntaja :as rrmm]
+   [reitit.ring.middleware.parameters :as rrmp]
+   [ring.middleware.defaults :as ring-defaults]
+   [ring.middleware.gzip :as ring-gzip]
+   [ring.util.response :as resp]))
 
 (defn wrap-merge-params
   "Merge all params maps, place under `:all-params`"
@@ -153,3 +157,14 @@
    rrc/coerce-response-middleware
    wrap-merge-params
    wrap-muuntaja-encode])
+
+(def MiddlewareComponentGroup
+  {:routes           ds/required-component
+   :router           {:start (fn [{:keys [routes router-opts]} _ _]
+                               (rr/router routes router-opts))
+                      :conf  {:routes      (ds/ref :routes)
+                              :router-opts {:data {:coercion   rcm/coercion
+                                                   :muuntaja   m/instance
+                                                   :middleware (ds/ref :route-middleware)}}}}
+   :route-middleware {:start (fn [_ _ _] (route-middleware))}
+   :middleware       AppMiddlewareComponent})
