@@ -1,5 +1,5 @@
 (ns build
-  "donut/endpoint's build script. Builds on https://github.com/seancorfield/honeysql/blob/develop/build.clj
+  "donut/middleware's build script. Builds on https://github.com/seancorfield/honeysql/blob/develop/build.clj
 
   Run tests:
   clojure -X:test
@@ -10,7 +10,7 @@
   (:require [clojure.tools.build.api :as b]
             [org.corfield.build :as bb]))
 
-(def lib 'club.donutpower/endpoint)
+(def lib 'club.donutpower/middleware)
 (def version (format "0.0.%s" (b/git-count-revs nil)))
 
 (defn deploy "Deploy the JAR to Clojars"
