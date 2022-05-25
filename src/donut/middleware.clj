@@ -149,10 +149,9 @@
                  (fn [handler] (app-middleware handler config)))
         :config  app-middleware-config})
 
-(defn route-middleware
+(def route-middleware
   "This is route middleware because it's applied after reitit matches a route; it
   relies on route info."
-  []
   [rrmp/parameters-middleware
    rrmm/format-middleware
    rrc/coerce-request-middleware
@@ -167,7 +166,7 @@
                            :config  {:routes      (ds/local-ref [:routes])
                                      :router-opts {:data {:coercion   rcm/coercion
                                                           :muuntaja   m/instance
-                                                          :middleware (ds/ref :route-middleware)}}}}
+                                                          :middleware (ds/local-ref [:route-middleware])}}}}
    :routes           ds/required-component
-   :route-middleware #::ds{:start (fn [_] (route-middleware))}
+   :route-middleware route-middleware
    :middleware       AppMiddlewareComponent})
