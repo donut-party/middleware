@@ -1,9 +1,7 @@
 {:paths ["src"]
  :deps  {bk/ring-gzip              {:mvn/version "0.3.0"}
-         club.donutpower/system    {:mvn/version "0.0.112"}
+         club.donutpower/system    {:mvn/version "0.0.154"}
          org.clojure/clojure       {:mvn/version "1.10.3"}
-         medley/medley             {:mvn/version "1.3.0"}
-         meta-merge/meta-merge     {:mvn/version "1.0.0"}
          metosin/malli             {:mvn/version "0.6.1"}
          metosin/muuntaja          {:mvn/version "0.6.8"}
          metosin/reitit-ring       {:mvn/version "0.5.15"}
@@ -13,7 +11,15 @@
          ring/ring                 {:mvn/version "1.9.4"}}
 
  :aliases
- {:dev   {:extra-paths ["test"]}
+ {:dev {:extra-paths   ["test"]
+        :override-deps {club.donutpower/system {:local/root "../system"}}}
+
+  :test
+  {:extra-paths ["test"]
+   :extra-deps  {io.github.cognitect-labs/test-runner
+                 {:git/tag "v0.5.0" :git/sha "48c3c67"}}
+   :exec-fn     cognitect.test-runner.api/test}
+
   :build {:deps       {io.github.seancorfield/build-clj
                        {:git/tag "v0.6.6" :git/sha "171d5f1"}}
           :ns-default build}}}

@@ -35,15 +35,15 @@
         handler)))
 
 (defn wrap-muuntaja-encode
-  "TODO we want to muuntaja/encode because..."
+  "indicate we want to encode response with muuntaja. muuntaja handles the
+  conversion between clojure data structures and wire formats"
   [handler]
   (fn [req]
     (let [res (handler req)]
       (assoc res :muuntaja/encode true))))
 
 (defn wrap-format-exception
-  "Catches exceptions and returns a formatted response.
-  TODO update this to use segment response?"
+  "Catches exceptions and returns a formatted response."
   [handler {:keys [include-data]}]
   (fn [req]
     (try (handler req)
@@ -145,11 +145,13 @@
 
 (def AppMiddlewareComponent
   "A donut.system component that applies configured middleware to a handler"
-  {:start (fn [conf _ _]
-            (fn [handler] (app-middleware handler conf)))
-   :conf  app-middleware-config})
+  #::ds{:start (fn [{:keys [::ds/config]}]
+                 (fn [handler] (app-middleware handler config)))
+        :config  app-middleware-config})
 
 (defn route-middleware
+  "This is route middleware because it's applied after reitit matches a route; it
+  relies on route info."
   []
   [rrmp/parameters-middleware
    rrmm/format-middleware
@@ -159,12 +161,13 @@
    wrap-muuntaja-encode])
 
 (def MiddlewareComponentGroup
-  {:routes           ds/required-component
-   :router           {:start (fn [{:keys [routes router-opts]} _ _]
-                               (rr/router routes router-opts))
-                      :conf  {:routes      (ds/ref :routes)
-                              :router-opts {:data {:coercion   rcm/coercion
-                                                   :muuntaja   m/instance
-                                                   :middleware (ds/ref :route-middleware)}}}}
-   :route-middleware {:start (fn [_ _ _] (route-middleware))}
+  {:router           #::ds{:start (fn [{:keys [::ds/config]}]
+                                    (rr/router (:routes config)
+                                               (:router-opts config)))
+                           :config  {:routes      (ds/local-ref [:routes])
+                                     :router-opts {:data {:coercion   rcm/coercion
+                                                          :muuntaja   m/instance
+                                                          :middleware (ds/ref :route-middleware)}}}}
+   :routes           ds/required-component
+   :route-middleware #::ds{:start (fn [_] (route-middleware))}
    :middleware       AppMiddlewareComponent})
