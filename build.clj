@@ -8,9 +8,10 @@
   clojure -A:deps -T:build help/doc"
 
   (:require [clojure.tools.build.api :as b]
-            [org.corfield.build :as bb]))
+            [org.corfield.build :as bb])
+  (:refer-clojure :exclude [test]))
 
-(def lib 'club.donutpower/middleware)
+(def lib 'party.donut/middleware)
 (def version (format "0.0.%s" (b/git-count-revs nil)))
 
 (defn deploy "Deploy the JAR to Clojars"

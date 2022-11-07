@@ -1,18 +1,18 @@
 {:paths ["src"]
  :deps  {bk/ring-gzip              {:mvn/version "0.3.0"}
-         club.donutpower/system    {:mvn/version "0.0.154"}
-         org.clojure/clojure       {:mvn/version "1.10.3"}
          metosin/malli             {:mvn/version "0.6.1"}
          metosin/muuntaja          {:mvn/version "0.6.8"}
          metosin/reitit-ring       {:mvn/version "0.5.15"}
          metosin/reitit-malli      {:mvn/version "0.5.15"}
          metosin/reitit-middleware {:mvn/version "0.5.15"}
+         org.clojure/clojure       {:mvn/version "1.10.3"}
+         party.donut/system        {:mvn/version "0.0.167"}
          ring/ring-defaults        {:mvn/version "0.3.3"}
          ring/ring                 {:mvn/version "1.9.4"}}
 
  :aliases
  {:dev {:extra-paths   ["test"]
-        :override-deps {club.donutpower/system {:local/root "../system"}}}
+        :override-deps {party.donut/system {:local/root "../system"}}}
 
   :test
   {:extra-paths ["test"]
